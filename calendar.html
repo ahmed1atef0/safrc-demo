@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>View Calendar — St. Albert Family Resource Centre</title>
+<meta name="description" content="The current SAFRC program calendar — viewing purposes only.">
+<link rel="icon" type="image/png" sizes="256x256" href="assets/img/safrc-emblem.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&family=Permanent+Marker&display=swap" rel="stylesheet">
+<meta name="safrc-ann" content="start=2026-11-01T00:00:00-07:00; opens=2026-12-02T07:00:00-07:00; until=2026-12-16T23:59:59-07:00">
+<script>
+/* SAFRC pre-paint boot (runs on every page before first paint).
+   Restores the saved dark/light theme and the announcement-bar state from
+   layered storage — localStorage, then a real cookie, then sessionStorage,
+   then window.name — so a choice made on ONE page holds on EVERY page,
+   on http(s), localhost and file:// alike. */
+(function(){try{
+  function G(k){
+    try{var v=localStorage.getItem("safrc-"+k);if(v!==null&&v!=="")return v}catch(e){}
+    try{var m=document.cookie.match(new RegExp("(?:^|; )safrc-"+k+"=([^;]*)"));if(m)return decodeURIComponent(m[1])}catch(e){}
+    try{var s=sessionStorage.getItem("safrc-"+k);if(s!==null&&s!=="")return s}catch(e){}
+    try{var n=window.name||"";if(n.indexOf("safrc|")===0){var q=new RegExp("(?:^|&)"+k+"=([^&]*)").exec(n.slice(6));if(q)return decodeURIComponent(q[1])}}catch(e){}
+    return null;
+  }
+  var t=G("theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+  document.documentElement.dataset.theme=t;
+  /* announcement bar: hidden before paint when dismissed < 30 min ago
+     or when its campaign window is over/not started yet */
+  var now=Date.now(),c={};
+  try{
+    var meta=document.querySelector('meta[name="safrc-ann"]');
+    if(meta)(meta.content||"").split(";").forEach(function(p){
+      var kv=p.split("=");if(kv[1])c[kv[0].trim()]=Date.parse(kv[1].trim());});
+    var off=(isFinite(c.start)&&now<c.start)||(isFinite(c.until)&&now>c.until);
+    if(!off){var d=G("topbar");if(d!==null&&now-(+d)<18e5)off=true}
+    if(off)document.documentElement.classList.add("topbar-off");
+  }catch(e){}
+}catch(e){}})();
+</script>
+<script>
+/* Refreshing keeps your place on the page: leave scroll restoration to the
+   browser and suppress the smooth-scroll animation while it restores. */
+(function(){try{
+  document.documentElement.classList.add("no-smooth");
+  var done=false;function re(){if(done)return;done=true;
+    requestAnimationFrame(function(){document.documentElement.classList.remove("no-smooth")});}
+  addEventListener("load",function(){setTimeout(re,150)});
+  setTimeout(re,1200);
+}catch(e){}})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/motion@14.9.0/dist/motion.js"></script>
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+</head>
+<body>
+<a class="skip" href="#page">Skip to content</a>
+
+
+<div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+
+<div class="site-top" id="siteTop">
+  <div class="topbar" id="topbar">
+    <span class="ann-chip"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Dec 02 · 7:00 AM</span>
+    <strong data-open-text="Winter Registration is open — register while spots last!">Winter Registration opens December 2nd at 7am.</strong>
+    <span class="ann-count" id="annCount" aria-live="polite"></span>
+    <a class="ann-btn" href="https://stalbertfrc.wildapricot.org/Registration" target="_blank" rel="noopener">Register <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    <button class="topbar-close" id="topbarClose" aria-label="Dismiss announcement"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <header class="header">
+    <a class="brand" href="index.html" aria-label="SAFRC — home">
+      <img src="assets/img/safrc-logo.webp" alt="St. Albert Family Resource Centre — Growing Strong Together">
+    </a>
+    <nav class="nav" aria-label="Main navigation">
+      <ul class="nav-list" id="navList">
+        <li class="has-drop"><button class="drop-toggle" aria-expanded="false" aria-haspopup="true">About Us <svg viewBox="0 0 12 8" fill="none"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+          <ul class="drop">
+            <li><a href="who-we-are.html">Who We Are</a></li>
+            <li><a href="our-history.html">Our History</a></li>
+            <li><a href="family-resource-network-frn.html">Family Resource Network (FRN)</a></li>
+            <li><a href="diversity-equity-inclusion.html">Diversity, Equity &amp; Inclusion (DEI)</a></li>
+            <li><a href="board-of-directors.html">Board of Directors</a></li>
+            <li><a href="resources.html">Resources</a></li>
+            <li><a href="partners.html">Partners</a></li>
+          </ul></li>
+        <li class="has-drop"><button class="drop-toggle" aria-expanded="false" aria-haspopup="true">Programs <svg viewBox="0 0 12 8" fill="none"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+          <ul class="drop">
+            <li><a href="about-our-programs.html">About Our Programs</a></li>
+            <li><a href="program-registration.html">Program Registration</a></li>
+            <li><a href="early-childhood-programs.html">Early Childhood Programs (0-5)</a></li>
+            <li><a href="child-youth-programs.html">Child &amp; Youth Programs (6-12)</a></li>
+            <li><a href="youth-programs-13-17.html">Youth Programs (13-17)</a></li>
+            <li><a href="parent-caregiver-programs.html">Parent &amp; Caregiver Programs</a></li>
+            <li><a href="outreach-programs.html">Outreach Programs</a></li>
+            <li><a href="calendar.html">View Calendar</a></li>
+          </ul></li>
+        <li class="has-drop"><button class="drop-toggle" aria-expanded="false" aria-haspopup="true">Family Support Services <svg viewBox="0 0 12 8" fill="none"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+          <ul class="drop">
+            <li><a href="family-support-programs.html">Family Support Programs</a></li>
+            <li><a href="rapid-access-counselling.html">Counselling</a></li>
+            <li><a href="testimonials.html">Testimonials</a></li>
+          </ul></li>
+        <li class="has-drop"><button class="drop-toggle" aria-expanded="false" aria-haspopup="true">Events &amp; Fundraisers <svg viewBox="0 0 12 8" fill="none"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+          <ul class="drop">
+            <li><a href="play-day-event.html">ASQ Fair: Play Day - May 12, 2026</a></li>
+            <li><a href="heartsandhasbrowns.html">RECAP: Hearts and Hashbrowns Breakfast Fundraiser 2026</a></li>
+            <li><a href="orange-door-campaign-2025.html">Orange Door Campaign 2025</a></li>
+            <li><a href="skip-the-depot.html">Skip the Depot Fundraiser (ongoing)</a></li>
+          </ul></li>
+        <li class="has-drop"><button class="drop-toggle" aria-expanded="false" aria-haspopup="true">Get Involved <svg viewBox="0 0 12 8" fill="none"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+          <ul class="drop">
+            <li><a href="funders-and-thanks.html">Funders &amp; Special Thanks</a></li>
+            <li><a href="volunteering.html">Volunteering</a></li>
+            <li><a href="employment.html">Employment</a></li>
+            <li><a href="donate.html">Donate</a></li>
+          </ul></li>
+        <li><a href="contact.html">Contact Us</a></li>
+      </ul>
+    </nav>
+    <div class="header-actions">
+      <button class="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false">
+        <svg class="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg>
+      </button>
+      <a class="btn btn-donate btn-sm" href="donate.html">♥ DONATE</a>
+      <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false"><span></span></button>
+    </div>
+  </header>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-hidden="true" aria-label="Mobile menu" inert>
+  <div class="drawer-head">
+    <img src="assets/img/safrc-logo.webp" alt="SAFRC logo">
+    <button class="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false">
+      <svg class="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
+      <svg class="i-moon" viewBox="0 0 24 24"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg>
+    </button>
+    <button class="drawer-close" id="drawerClose" aria-label="Close menu">✕</button>
+  </div>
+  <nav class="drawer-nav" id="drawerNav" aria-label="Mobile navigation"></nav>
+  <div class="drawer-foot">
+    <a class="btn btn-donate" href="donate.html">♥ Donate</a>
+    <a class="btn btn-mint" href="contact.html">Contact Us</a>
+  </div>
+</aside>
+
+<main id="page">
+
+  <section class="page-hero">
+    <div class="ph-bg" id="heroBg"><img src="assets/img/unsplash-image-lhwnnfxk1no.webp" alt="Calendar on a desk"></div>
+    <div class="ph-overlay" aria-hidden="true"></div>
+    <p class="hero-kicker" data-hero="1">Viewing Purposes Only</p>
+    <h1 class="hero-title" id="heroTitle"><span class="hero-line"><span class="w"><span class="wi">Program</span></span></span>
+        <span class="hero-line"><span class="w hero-accent"><span class="w"><span class="wi">Calendar</span></span><span class="hero-hl" aria-hidden="true"></span></span></span></h1>
+    <p class="page-sub" data-hero="2">The current program calendar — viewing purposes only. Registration is through our member site.</p>
+  </section>
+
+  <section class="sec">
+    <div class="container">
+      <header class="sec-head" data-reveal>
+        <p class="eyebrow">VIEWING PURPOSES ONLY</p>
+        <h2 class="sec-title">Program calendar</h2>
+        <p>The current program calendar lives on our member site — here is how to use it.</p>
+      </header>
+      <div class="split">
+        <div>
+          <div class="chips" data-reveal>
+            <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="17" rx="2"/><path d="M8 3v4"/><path d="M16 3v4"/><path d="M3 10.5h18"/></svg>Published each season</span>
+            <span class="chip">Viewing purposes only</span>
+            <span class="chip">Powered by Wild Apricot</span>
+          </div>
+          <div class="prose" data-reveal style="margin:0">
+            <p>Our interactive program calendar lives on our <a href="https://stalbertfrc.wildapricot.org/" target="_blank" rel="noopener">member site</a> — Powered by Wild Apricot. It shows the current season’s programs at a glance, alongside the full program guide.</p>
+            <p><strong>The calendar is for viewing purposes only.</strong> To register for a program, head to the member site and follow our registration steps — see <a href="program-registration.html">how to register</a>.</p>
+          </div>
+          <div class="alert-box" data-reveal>
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16.5v.01"/></svg>
+            <p><strong>Note:</strong> the program guide calendar is published each season — Winter registration opens December 2nd at 7am.</p>
+          </div>
+          <div class="btn-row" data-reveal style="justify-content:flex-start">
+            <a class="btn btn-sun" href="https://stalbertfrc.wildapricot.org/" target="_blank" rel="noopener">Open the member site</a>
+            <a class="btn btn-mint" href="program-registration.html">How to register</a>
+          </div>
+        </div>
+        <div class="split-media" data-reveal>
+          <div class="hist-photo">
+            <div class="frame sheen"><img src="assets/img/unsplash-image-lhwnnfxk1no.webp" alt="Wall calendar and planner on a desk" loading="lazy"></div>
+            <span class="chip cap">Seasonal program guide</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <img class="flower f1" src="assets/img/flower-footer5.webp" alt="" aria-hidden="true" loading="lazy">
+    <img class="flower f2" src="assets/img/flower-footer5.webp" alt="" aria-hidden="true" loading="lazy">
+    <div class="container"><div class="cta-card sheen" data-reveal>
+      <h2>Ready to <span>register?</span></h2>
+      <p>The calendar is for viewing — registration happens on our member site. Winter registration opens December 2nd at 7am.</p>
+      <div class="btn-row">
+        <a class="btn btn-sun btn-lg" href="https://stalbertfrc.wildapricot.org/" target="_blank" rel="noopener">Open the member site</a>
+        <a class="btn btn-mint btn-lg" href="program-registration.html">How to register</a>
+      </div>
+    </div></div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="container footer-grid">
+    <div class="f-brand" data-reveal>
+      <a href="index.html"><img src="assets/img/safrc-logo.webp" alt="St. Albert Family Resource Centre logo"></a>
+      <p>St. Albert Family Resource Centre (FRC) is a thriving non-profit family resource centre serving families in St. Albert and the surrounding communities since 1982.</p>
+      <div class="socials">
+        <a href="https://www.instagram.com/stalbertfrc/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 48 48" aria-hidden="true"><defs><radialGradient id="igGrad" cx="30%" cy="107%" r="120%"><stop offset="0%" stop-color="#fdf497"/><stop offset="5%" stop-color="#fdf497"/><stop offset="45%" stop-color="#fd5949"/><stop offset="60%" stop-color="#d6249f"/><stop offset="90%" stop-color="#285aeb"/></radialGradient></defs><circle cx="24" cy="24" r="24" fill="url(#igGrad)"/><g fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><rect x="13" y="13" width="22" height="22" rx="6.5"/><circle cx="24" cy="24" r="5.5"/><circle cx="30.5" cy="17.5" r="1.6" fill="#fff" stroke="none"/></g></svg></a>
+        <a href="https://www.facebook.com/St.AlbertFRC/" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.09 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.7 4.53-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.96.93-1.96 1.89v2.26h3.33l-.53 3.49h-2.8V24C19.61 23.09 24 18.1 24 12.07z"/></svg></a>
+        <a href="https://www.linkedin.com/company/st-albert-frc/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 110-4.12 2.06 2.06 0 010 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.55C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.72C24 .77 23.2 0 22.22 0z"/></svg></a>
+      </div>
+    </div>
+    <div class="f-col" data-reveal><h3>Information</h3><ul>
+      <li><a href="resources.html">Resources</a></li>
+      <li><a href="annual-reports.html">Annual Reports</a></li>
+      <li><a href="funders-and-thanks.html">Funders</a></li>
+      <li><a href="privacy-policy.html">Privacy Policy</a></li>
+      <li><a href="volunteering.html">Volunteering</a></li>
+      <li><a href="employment.html">Employment</a></li>
+    </ul></div>
+    <div class="f-col" data-reveal><h3>Program Info</h3><ul>
+      <li><a href="early-childhood-programs.html">Early Childhood (0-5)</a></li>
+      <li><a href="child-youth-programs.html">Child &amp; Youth (6–12)</a></li>
+      <li><a href="youth-programs-13-17.html">Youth (13–17)</a></li>
+      <li><a href="parent-caregiver-programs.html">Parents &amp; Caregivers</a></li>
+      <li><a href="outreach-programs.html">Outreach</a></li>
+      <li><a href="family-support-programs.html">Family Support</a></li>
+      <li><a href="https://www.stalbertfrc.ca/s/St-Albert-Family-Resource-Centre-Members-Handbook-2026.pdf">Members Handbook</a></li>
+      <li><a href="https://www.stalbertfrc.ca/s/Illness-Policy.pdf">Illness Policy</a></li>
+    </ul></div>
+    <div class="f-col f-contact" data-reveal><h3>Contact Us</h3>
+      <address>
+        <div class="ci"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span><span>Suite 10A, 215 Carnegie Dr<br>St. Albert, Alberta T8N 5B1</span></div>
+        <div class="ci"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></span><span><a href="tel:7804597377">780-459-7377</a><br>Fax: 780-459-7399</span></div>
+        <div class="ci"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg></span><a href="mailto:recpt@stalbertfrc.ca">recpt@stalbertfrc.ca</a></div>
+      </address>
+      <div class="hours"><strong>Open Mon–Fri</strong><br>9am–12pm &amp; 1pm–4:30pm<br><span class="door-note">Our front door faces Campbell Road (West)</span></div>
+    </div>
+  </div>
+  <div class="container funders" data-reveal>
+    <a href="https://www.alberta.ca/family-resource-networks" target="_blank" rel="noopener"><img src="assets/img/abgovtlogo.webp" alt="Government of Alberta"></a>
+    <a href="https://www.myunitedway.ca/" target="_blank" rel="noopener"><img src="assets/img/uwacr-logo-footer.webp" alt="United Way"></a>
+    <a href="https://stalbert.ca/" target="_blank" rel="noopener"><img src="assets/img/cityofstalbertlogo.webp" alt="City of St. Albert"></a>
+  </div>
+  <div class="container"><div class="land is-collapsed" data-reveal>
+    <h3><button class="land-toggle" aria-expanded="false" aria-controls="landBody">🪶 Land Acknowledgment — Treaty 6 Territory
+      <svg class="chev" viewBox="0 0 12 8" fill="none"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></h3>
+    <div class="land-body" id="landBody"><div class="land-text">
+      <p>The St. Albert Family Resource Centre acknowledges that we are located on Treaty 6 Territory, the traditional lands of the Cree, Dene, Blackfoot, Saulteaux, Nakota Sioux, and Métis people. We honour and recognize the rich Indigenous histories, cultures, and traditions that have shaped this land long before us.</p>
+      <p>As an organization dedicated to supporting children and families, we affirm our commitment to fostering inclusivity, respect, and meaningful relationships with Indigenous communities. We acknowledge the profound importance of family, kinship, and intergenerational learning that has long been central to Indigenous ways of life.</p>
+      <p>Through education, reconciliation, and community-building, we strive to create a welcoming space where all families feel valued, supported, and empowered. We walk this path with humility, learning from Indigenous voices, and working towards a future built on understanding, healing, and connection.</p>
+      <p>We are grateful for the opportunity to live, work, and gather on this land. We pledge to continue learning from and listening to Indigenous peoples, honoring their contributions, and working together towards a brighter future for all families.</p>
+    </div></div>
+  </div></div>
+  <div class="container footer-bottom">
+    <p>© <span id="year">2026</span> St. Albert Family Resource Centre. All Rights Reserved. <span class="credit">Website created by ETeam</span></p>
+  </div>
+</footer>
+
+<button class="to-top" id="toTop" aria-label="Back to top">↑</button>
+
+<div class="cookie-banner" id="cookieBanner" role="region" aria-label="Cookie consent">
+  <div class="ck-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 8.6 6.3 5.5 5.5 0 0 1-7.9-7.9A9 9 0 0 0 12 3z"/><circle cx="9" cy="10.5" r=".9" fill="currentColor" stroke="none"/><circle cx="13.5" cy="8.5" r=".9" fill="currentColor" stroke="none"/><circle cx="15" cy="13" r=".9" fill="currentColor" stroke="none"/><circle cx="10" cy="14.5" r=".9" fill="currentColor" stroke="none"/></svg></div>
+  <div class="ck-text">
+    <strong>Cookies &amp; theme memory</strong>
+    <p>We only use browser storage (cookies &amp; localStorage) to remember your dark/light theme choice across pages and that you accepted this notice — shown once per browser. <a href="privacy-policy.html">Privacy policy</a></p>
+  </div>
+  <div class="ck-actions">
+    <button class="btn btn-sun btn-sm ck-accept" data-consent="all">Accept cookies</button>
+    <button class="btn btn-mint btn-sm ck-accept" data-consent="essential">Essential only</button>
+  </div>
+</div>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>
